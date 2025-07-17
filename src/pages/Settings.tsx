@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Save, Store, Mail, Palette, Shield, Globe, Zap, Bell, Users, BarChart3, Lock } from 'lucide-react'
+import { Save, Store, Mail, Palette, Shield, Globe, Zap, Bell, Users, BarChart3, Lock, Download, Upload, RefreshCw, Trash2, AlertTriangle, CheckCircle, XCircle, Clock, Star, Camera, MessageSquare, Filter, Search, Eye, EyeOff, Smartphone, Monitor, Settings2, Database, Cloud, Key, FileText, HelpCircle } from 'lucide-react'
 import { useSettings } from '../hooks/useSettings'
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { Button } from '../components/ui/button'
@@ -10,6 +10,10 @@ import { Textarea } from '../components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs'
 import { Badge } from '../components/ui/badge'
+import { Progress } from '../components/ui/progress'
+import { Separator } from '../components/ui/separator'
+import { Alert, AlertDescription } from '../components/ui/alert'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '../components/ui/dialog'
 import { toast } from 'react-hot-toast'
 
 export default function Settings() {

@@ -50,7 +50,7 @@ serve(async (req) => {
     let result: any;
 
     switch (action) {
-      case 'create':
+      case 'create': {
         if (!src) {
           return new Response(JSON.stringify({ error: 'src parameter required for create action' }), {
             status: 400,
@@ -92,8 +92,9 @@ serve(async (req) => {
 
         result = await shopifyResponse.json();
         break;
+      }
 
-      case 'delete':
+      case 'delete': {
         if (!id) {
           return new Response(JSON.stringify({ error: 'id parameter required for delete action' }), {
             status: 400,
@@ -127,6 +128,7 @@ serve(async (req) => {
 
         result = { deleted: true };
         break;
+      }
 
       case 'list':
         shopifyResponse = await fetch(`https://${cleanShop}/admin/api/2024-01/script_tags.json`, {

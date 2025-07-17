@@ -8,6 +8,7 @@ import ReviewsManagement from './pages/ReviewsManagement'
 import Settings from './pages/Settings'
 import EmailTemplates from './pages/EmailTemplates'
 import WidgetCustomization from './pages/WidgetCustomization'
+import WidgetDemo from './pages/WidgetDemo'
 import ShopifySetup from './pages/ShopifySetup'
 import Analytics from './pages/Analytics'
 import Campaigns from './pages/Campaigns'
@@ -112,6 +113,7 @@ function App() {
             <Route path="/settings" element={<Settings />} />
             <Route path="/email-templates" element={<EmailTemplates />} />
             <Route path="/widget" element={<WidgetCustomization />} />
+            <Route path="/widget-demo" element={<WidgetDemo />} />
             <Route path="/shopify-setup" element={<ShopifySetup />} />
           </Routes>
         </Layout>

@@ -12,7 +12,8 @@ import {
   Shield,
   TrendingUp,
   Send,
-  HelpCircle
+  HelpCircle,
+  Play
 } from 'lucide-react'
 import { blink } from '../blink/client'
 import { useShopify } from '../contexts/ShopifyContext'
@@ -30,6 +31,7 @@ const navigation = [
   { name: 'Q&A', href: '/qna', icon: HelpCircle },
   { name: 'Email Templates', href: '/email-templates', icon: Mail },
   { name: 'Widget', href: '/widget', icon: Palette },
+  { name: 'Widget Demo', href: '/widget-demo', icon: Play },
   { name: 'Settings', href: '/settings', icon: Settings },
 ]
 

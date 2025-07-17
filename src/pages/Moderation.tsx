@@ -639,7 +639,7 @@ export default function Moderation() {
                     <span className="font-bold">{stats.avgConfidence.toFixed(1)}%</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">High Confidence (>90%)</span>
+                    <span className="text-gray-600">High Confidence (&gt;90%)</span>
                     <span className="font-bold">
                       {items.filter(i => i.aiAnalysis.confidence > 90).length}
                     </span>

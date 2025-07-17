@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useShopify } from '../contexts/ShopifyContext'
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
 import { Button } from './ui/button'
@@ -18,9 +18,9 @@ export default function AutoWidgetInstaller() {
     if (isConnected && shopifyClient) {
       checkInstallation()
     }
-  }, [isConnected, shopifyClient])
+  }, [isConnected, shopifyClient, checkInstallation])
 
-  const checkInstallation = async () => {
+  const checkInstallation = useCallback(async () => {
     if (!shopifyClient) return
 
     setChecking(true)
@@ -38,7 +38,7 @@ export default function AutoWidgetInstaller() {
     } finally {
       setChecking(false)
     }
-  }
+  }, [shopifyClient])
 
   const handleInstall = async () => {
     if (!shopifyClient || !shopInfo) return
@@ -106,14 +106,14 @@ export default function AutoWidgetInstaller() {
     return (
       <Card>
         <CardHeader>
-          <CardTitle className=\"flex items-center\">
-            <Zap className=\"h-5 w-5 mr-2\" />
+          <CardTitle className="flex items-center">
+            <Zap className="h-5 w-5 mr-2" />
             Automatic Widget Installation
           </CardTitle>
         </CardHeader>
         <CardContent>
           <Alert>
-            <AlertCircle className=\"h-4 w-4\" />
+            <AlertCircle className="h-4 w-4" />
             <AlertDescription>
               Please connect your Shopify store first to use automatic installation.
             </AlertDescription>
@@ -126,13 +126,141 @@ export default function AutoWidgetInstaller() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className=\"flex items-center justify-between\">
-          <div className=\"flex items-center\">
-            <Zap className=\"h-5 w-5 mr-2\" />
+        <CardTitle className="flex items-center justify-between">
+          <div className="flex items-center">
+            <Zap className="h-5 w-5 mr-2" />
             Automatic Widget Installation
           </div>
-          {checking && <Loader2 className=\"h-4 w-4 animate-spin\" />}
+          {checking && <Loader2 className="h-4 w-4 animate-spin" />}
         </CardTitle>
       </CardHeader>
-      <CardContent className=\"space-y-4\">
-        <div className=\"flex items-center justify-between p-4 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg border\">\n          <div>\n            <h3 className=\"font-medium text-gray-900\">One-Click Installation</h3>\n            <p className=\"text-sm text-gray-600\">Automatically install all TrustLoop widgets on your store</p>\n          </div>\n          <Badge className={installed ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}>\n            {installed ? 'Installed' : 'Not Installed'}\n          </Badge>\n        </div>\n\n        {error && (\n          <Alert variant=\"destructive\">\n            <AlertCircle className=\"h-4 w-4\" />\n            <AlertDescription>{error}</AlertDescription>\n          </Alert>\n        )}\n\n        <div className=\"space-y-3\">\n          <div className=\"flex items-start space-x-3\">\n            <div className=\"flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center\">\n              <span className=\"text-sm font-medium text-blue-600\">1</span>\n            </div>\n            <div>\n              <h4 className=\"font-medium\">Script Tag Installation</h4>\n              <p className=\"text-sm text-gray-600\">Adds TrustLoop widgets to your store automatically</p>\n            </div>\n          </div>\n          <div className=\"flex items-start space-x-3\">\n            <div className=\"flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center\">\n              <span className=\"text-sm font-medium text-blue-600\">2</span>\n            </div>\n            <div>\n              <h4 className=\"font-medium\">Webhook Setup</h4>\n              <p className=\"text-sm text-gray-600\">Automatically triggers review requests after orders</p>\n            </div>\n          </div>\n          <div className=\"flex items-start space-x-3\">\n            <div className=\"flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center\">\n              <span className=\"text-sm font-medium text-blue-600\">3</span>\n            </div>\n            <div>\n              <h4 className=\"font-medium\">Smart Detection</h4>\n              <p className=\"text-sm text-gray-600\">Widgets appear on the right pages automatically</p>\n            </div>\n          </div>\n        </div>\n\n        <div className=\"flex space-x-3\">\n          {!installed ? (\n            <Button \n              onClick={handleInstall} \n              disabled={installing}\n              className=\"flex-1\"\n            >\n              {installing ? (\n                <>\n                  <Loader2 className=\"h-4 w-4 mr-2 animate-spin\" />\n                  Installing...\n                </>\n              ) : (\n                <>\n                  <Zap className=\"h-4 w-4 mr-2\" />\n                  Install Widgets\n                </>\n              )}\n            </Button>\n          ) : (\n            <>\n              <Button \n                onClick={handleUninstall} \n                disabled={installing}\n                variant=\"destructive\"\n                className=\"flex-1\"\n              >\n                {installing ? (\n                  <>\n                    <Loader2 className=\"h-4 w-4 mr-2 animate-spin\" />\n                    Uninstalling...\n                  </>\n                ) : (\n                  'Uninstall Widgets'\n                )}\n              </Button>\n              <Button variant=\"outline\" asChild>\n                <a href={`https://${shopInfo.domain}`} target=\"_blank\" rel=\"noopener noreferrer\">\n                  <ExternalLink className=\"h-4 w-4 mr-2\" />\n                  View Store\n                </a>\n              </Button>\n            </>\n          )}\n        </div>\n\n        {installed && (\n          <Alert>\n            <CheckCircle className=\"h-4 w-4\" />\n            <AlertDescription>\n              <strong>Widgets installed successfully!</strong> Your review widgets are now active on your store. \n              Visit your store to see them in action.\n            </AlertDescription>\n          </Alert>\n        )}\n\n        {/* Script Tags List */}\n        {scriptTags.length > 0 && (\n          <div className=\"mt-6\">\n            <h4 className=\"font-medium mb-3 flex items-center\">\n              <Settings className=\"h-4 w-4 mr-2\" />\n              Installed Script Tags\n            </h4>\n            <div className=\"space-y-2\">\n              {scriptTags.map((tag: any) => (\n                <div key={tag.id} className=\"flex items-center justify-between p-3 bg-gray-50 rounded-lg\">\n                  <div>\n                    <p className=\"text-sm font-medium truncate\">{tag.src}</p>\n                    <p className=\"text-xs text-gray-500\">Event: {tag.event}</p>\n                  </div>\n                  <Badge variant={tag.src.includes('trustloop') ? 'default' : 'secondary'}>\n                    {tag.src.includes('trustloop') ? 'TrustLoop' : 'Other'}\n                  </Badge>\n                </div>\n              ))}\n            </div>\n          </div>\n        )}\n      </CardContent>\n    </Card>\n  )\n}
+      <CardContent className="space-y-4">
+        <div className="flex items-center justify-between p-4 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg border">
+          <div>
+            <h3 className="font-medium text-gray-900">One-Click Installation</h3>
+            <p className="text-sm text-gray-600">Automatically install all TrustLoop widgets on your store</p>
+          </div>
+          <Badge className={installed ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}>
+            {installed ? 'Installed' : 'Not Installed'}
+          </Badge>
+        </div>
+
+        {error && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
+
+        <div className="space-y-3">
+          <div className="flex items-start space-x-3">
+            <div className="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
+              <span className="text-sm font-medium text-blue-600">1</span>
+            </div>
+            <div>
+              <h4 className="font-medium">Script Tag Installation</h4>
+              <p className="text-sm text-gray-600">Adds TrustLoop widgets to your store automatically</p>
+            </div>
+          </div>
+          <div className="flex items-start space-x-3">
+            <div className="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
+              <span className="text-sm font-medium text-blue-600">2</span>
+            </div>
+            <div>
+              <h4 className="font-medium">Webhook Setup</h4>
+              <p className="text-sm text-gray-600">Automatically triggers review requests after orders</p>
+            </div>
+          </div>
+          <div className="flex items-start space-x-3">
+            <div className="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
+              <span className="text-sm font-medium text-blue-600">3</span>
+            </div>
+            <div>
+              <h4 className="font-medium">Smart Detection</h4>
+              <p className="text-sm text-gray-600">Widgets appear on the right pages automatically</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex space-x-3">
+          {!installed ? (
+            <Button 
+              onClick={handleInstall} 
+              disabled={installing}
+              className="flex-1"
+            >
+              {installing ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Installing...
+                </>
+              ) : (
+                <>
+                  <Zap className="h-4 w-4 mr-2" />
+                  Install Widgets
+                </>
+              )}
+            </Button>
+          ) : (
+            <>
+              <Button 
+                onClick={handleUninstall} 
+                disabled={installing}
+                variant="destructive"
+                className="flex-1"
+              >
+                {installing ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Uninstalling...
+                  </>
+                ) : (
+                  'Uninstall Widgets'
+                )}
+              </Button>
+              <Button variant="outline" asChild>
+                <a href={`https://${shopInfo.domain}`} target="_blank" rel="noopener noreferrer">
+                  <ExternalLink className="h-4 w-4 mr-2" />
+                  View Store
+                </a>
+              </Button>
+            </>
+          )}
+        </div>
+
+        {installed && (
+          <Alert>
+            <CheckCircle className="h-4 w-4" />
+            <AlertDescription>
+              <strong>Widgets installed successfully!</strong> Your review widgets are now active on your store. 
+              Visit your store to see them in action.
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {/* Script Tags List */}
+        {scriptTags.length > 0 && (
+          <div className="mt-6">
+            <h4 className="font-medium mb-3 flex items-center">
+              <Settings className="h-4 w-4 mr-2" />
+              Installed Script Tags
+            </h4>
+            <div className="space-y-2">
+              {scriptTags.map((tag: any) => (
+                <div key={tag.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div>
+                    <p className="text-sm font-medium truncate">{tag.src}</p>
+                    <p className="text-xs text-gray-500">Event: {tag.event}</p>
+                  </div>
+                  <Badge variant={tag.src.includes('trustloop') ? 'default' : 'secondary'}>
+                    {tag.src.includes('trustloop') ? 'TrustLoop' : 'Other'}
+                  </Badge>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  )
+}

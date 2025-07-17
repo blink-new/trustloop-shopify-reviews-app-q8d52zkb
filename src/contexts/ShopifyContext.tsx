@@ -26,6 +26,7 @@ interface ShopifyContextType {
 
 const ShopifyContext = createContext<ShopifyContextType | undefined>(undefined)
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useShopify = () => {
   const context = useContext(ShopifyContext)
   if (context === undefined) {
